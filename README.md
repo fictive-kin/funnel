@@ -1,4 +1,4 @@
-GFunnel
+Funnel
 ======
 
 An easy way to pull metrics from various sources, and transport them into [StatsD](https://github.com/etsy/statsd).
