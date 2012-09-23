@@ -199,14 +199,14 @@ The helper `funnel.ALL` collects all plugin/returned data under this heading.
 
 Most of the data available to Nagios is queryable via Munin, but since we're already running Nagios (and collecting this data as part of our general systems monitoring strategy), it's useful to collect some data directly from Nagios.
 
-    funnel.nagios({
+    source = funnel.nagios({
       source: 'http://nagios.example.com:64001/state',
       services: {
         'MongoDB queues': ['readers_queues','writers_queues'],
         'MongoDB Connect Check': funnel.ALL
       },
       from: ['db1.example.com', 'db2.example.com']
-    }),
+    });
 
 You'll notice that `funnel.ALL` is used here, too. This collects all performance data under this heading. `from` can be an array (or a string for a single server, but you *are* running MongoDB in a replica set, right? (-: ).
 
