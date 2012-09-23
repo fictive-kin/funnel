@@ -52,6 +52,7 @@ To send the data to StatsD, you'd simply change the call to `display()` to `toSt
     ).toStatsD('statsd.example.com');
 
 The `collect()` method takes any number of parameters, so you can queue them up:
+
     var cad = funnel.json({
       services: {'usdcad': 'rates.CAD'},
       from: 'http://openexchangerates.org/api/latest.json'
