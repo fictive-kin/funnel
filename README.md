@@ -76,7 +76,7 @@ The above code actually fetches `latest.json` twice. If you'd like to optimize t
     });
     funnel.collect(currency).display();
 
-That's the gist of how Funnel works. Next, we'll cover the specific fetcher plugins. To make these examples more clear, assume the following structure for these examples:
+That's the gist of how Funnel works. Next, we'll cover the specific fetcher plugins. To make the code more clear, assume the following structure for these examples:
 
 
     var funnel = require('../funnel/funnel');
