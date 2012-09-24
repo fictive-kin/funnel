@@ -1,7 +1,7 @@
 Funnel
 ======
 
-An easy way to pull metrics from various sources, and transport them into [StatsD](https://github.com/etsy/statsd).
+An easy way to fetch aggregate metrics from various sources, and transport them into [StatsD](https://github.com/etsy/statsd).
 
 
 Sources
@@ -24,9 +24,9 @@ Why
 
 At [Fictive Kin](http://fictivekin.com/), we use [StatsD](https://github.com/etsy/statsd) and [Graphite](http://graphite.wikidot.com/) to [measure everything](http://codeascraft.etsy.com/2011/02/15/measure-anything-measure-everything/) (for small values of *everything*).
 
-Our apps send *pushed metrics* (such as "a user grabbed a new image with [Gimme Bar](https://gimmebar.com/)") to StatsD in the code, but we also needed a system that could fetch *pulled metrics* (such as "the Gimme Bar load balancer's current average latency"). Enter Funnel.
+Our apps send *event metrics* (such as "a user grabbed a new image with [Gimme Bar](https://gimmebar.com/)") to StatsD in the code, but we also needed a system that could fetch *aggregate metrics* (such as "the Gimme Bar load balancer's current average latency"). Enter Funnel.
 
-Funnel makes it easy to pull all of those measurements in one common framework, and handles transportation to StatsD.
+Funnel makes it easy to fetch all of those measurements in one common framework, and handles transportation to StatsD.
 
 
 Usage and Examples
