@@ -172,7 +172,7 @@ This plugin is covered in some detail above, but here's a simple example:
 source = funnel.json({
   services: {
     'usdcad': 'rates.CAD',
-    'usdeyr': 'rates.EUR'
+    'usdeur': 'rates.EUR'
   },
   from: 'http://openexchangerates.org/api/latest.json'
 });
