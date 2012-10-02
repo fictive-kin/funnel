@@ -44,14 +44,16 @@ funnel.collect(
     },
     from: 'http://openexchangerates.org/api/latest.json'
   })
-).display();```
+).display();
+```
 
 To send the data to StatsD, you'd simply change the call to `display()` to `toStatsD(host, port)` (and `port` is optional):
 
 ```javascript
 funnel.collect(
   /* same as before */
-).toStatsD('statsd.example.com');```
+).toStatsD('statsd.example.com');
+```
 
 The `collect()` method takes any number of parameters, so you can queue them up:
 
@@ -66,7 +68,8 @@ var eur = funnel.json({
   from: 'http://openexchangerates.org/api/latest.json'
 });
 
-funnel.collect(cad, eur).display();```
+funnel.collect(cad, eur).display();
+```
 
 The above code actually fetches `latest.json` twice. If you'd like to optimize this, you can collect multiple `services` for each `from` sources:
 
@@ -78,7 +81,8 @@ var currency = funnel.json({
   },
   from: 'http://openexchangerates.org/api/latest.json'
 });
-funnel.collect(currency).display();```
+funnel.collect(currency).display();
+```
 
 That's the gist of how Funnel works. Next, we'll cover the specific fetcher plugins. To make the code more clear, assume the following structure for these examples:
 
@@ -87,7 +91,8 @@ var funnel = require('../funnel/funnel');
 
 var source = EXAMPLE_GOES_HERE;
 
-funnel.collect(source).display();```
+funnel.collect(source).display();
+```
 
 
 ### cloudwatch ###
@@ -111,7 +116,8 @@ source = funnel.cloudwatch({
     id: AWS_ID,
     secret: AWS_SECRET
   }
-});```
+});
+```
 
 The CloudWatch data is very specific to how CloudWatch (and the AWS API) returns data. A little bit more information can be found in this [aws-lib](https://github.com/livelycode/aws-lib) [example](https://github.com/livelycode/aws-lib/blob/master/examples/cw.js).
 
@@ -134,7 +140,8 @@ source = funnel.dbi({
     database: 'database_name',
     adapter: 'pg' // postgres
   }
-});```
+});
+```
 
 This plugin uses a callback method to fetch data. Notice the `funnel.dbiSolo` call above. This is a simple helper method that fetches the first column from the first row of the resultset, but sometimes a more robust callback is necessary. Sometimes you might even want to fetch multiple metrics from the same query. Here's an example of how to do that:
 
@@ -151,7 +158,8 @@ source = funnel.dbi({
     }
   },
   from: example_db_params
-});```
+});
+```
 
 This callback returns an object containing keys and values. Note also that the metric name contains a `%`. For each pair returned from the callback, a metric is generated for the key (which replaces `%` in the metric name), and the reading is the pair's value. The query is only run once, however.
 
@@ -167,7 +175,8 @@ source = funnel.json({
     'usdeyr': 'rates.EUR'
   },
   from: 'http://openexchangerates.org/api/latest.json'
-});```
+});
+```
 
 
 ### mongodb ###
@@ -185,7 +194,8 @@ source = funnel.mongo({
     }
   },
   from: 'mongodb://db.example.com/databasename'
-});```
+});
+```
 
 This example is pretty straightforward. This collects counts for the `users` and `assets` MongoDB collections (note the special funnel helper `funnel.COUNT`). For the `pro_users` metrics, a query and collection are supplied. The `from` is a [MongoDB connection URL](http://www.mongodb.org/display/DOCS/Connections).
 
@@ -200,7 +210,8 @@ source = funnel.munin({
     'cpu': ['user', 'idle', 'steal']
   },
   from: 'server.example.com'
-});```
+});
+```
 
 The helper `funnel.ALL` collects all plugin/returned data under this heading.
 
@@ -217,7 +228,8 @@ source = funnel.nagios({
     'MongoDB Connect Check': funnel.ALL
   },
   from: ['db1.example.com', 'db2.example.com']
-});```
+});
+```
 
 You'll notice that `funnel.ALL` is used here, too. This collects all performance data under this heading. `from` can be an array (or a string for a single server, but you *are* running MongoDB in a replica set, right? (-: ).
 
