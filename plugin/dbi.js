@@ -51,6 +51,7 @@ module.exports = function (service) {
                             'nodeName': thisService.name || service.hostalias || service.from.adapter + '-' + service.from.host,
                             'metricName': serviceName,
                             'reading': reading,
+                            'preserveMetricNameDot': thisService.preserveMetricNameDot,
                         });
 
                     }
