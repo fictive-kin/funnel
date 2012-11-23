@@ -37,7 +37,7 @@ module.exports = function (service) {
                             var metricName = serviceName.replace('%', k);
                             funneler({
                                 'funnel': 'dbi',
-                                'nodeName': thisService.name || service.hostalias || service.from.adapter + '-' + service.from.host,
+                                'nodeName': thisService.name || service.from.hostalias || service.from.adapter + '-' + service.from.host,
                                 'metricName': metricName,
                                 'reading': val,
                                 'preserveMetricNameDot': true
@@ -48,7 +48,7 @@ module.exports = function (service) {
                     } else { // scalar
                         funneler({
                             'funnel': 'dbi',
-                            'nodeName': thisService.name || service.hostalias || service.from.adapter + '-' + service.from.host,
+                            'nodeName': thisService.name || service.from.hostalias || service.from.adapter + '-' + service.from.host,
                             'metricName': serviceName,
                             'reading': reading,
                             'preserveMetricNameDot': thisService.preserveMetricNameDot,
