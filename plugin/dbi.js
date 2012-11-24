@@ -15,6 +15,19 @@ module.exports = function (service) {
         for (var serviceName in service.services) {
 
             (function (serviceName, thisService) {
+
+                var nodeName = thisService.name || service.from.hostalias || service.from.adapter + '-' + service.from.host;
+
+                if (undefined !== thisService.chance) {
+                    var r = Math.random();
+                    if (thisService.chance < r) {
+                        console.log("Not funneling " + nodeName + "." + serviceName + "; failed chance of " + thisService.chance + " < " + r);
+                        return;
+                    } else {
+                        console.log("Funneling " + nodeName + "." + serviceName + "; passed chance of " + thisService.chance + " >= " + r);
+                    }
+                }
+
                 pending++;
                 dbWrapper.fetchAll(thisService.query, null, function(err, result) {
                     pending--;
@@ -37,7 +50,7 @@ module.exports = function (service) {
                             var metricName = serviceName.replace('%', k);
                             funneler({
                                 'funnel': 'dbi',
-                                'nodeName': thisService.name || service.from.hostalias || service.from.adapter + '-' + service.from.host,
+                                'nodeName': nodeName,
                                 'metricName': metricName,
                                 'reading': val,
                                 'preserveMetricNameDot': true
@@ -48,7 +61,7 @@ module.exports = function (service) {
                     } else { // scalar
                         funneler({
                             'funnel': 'dbi',
-                            'nodeName': thisService.name || service.from.hostalias || service.from.adapter + '-' + service.from.host,
+                            'nodeName': nodeName,
                             'metricName': serviceName,
                             'reading': reading,
                             'preserveMetricNameDot': thisService.preserveMetricNameDot,
