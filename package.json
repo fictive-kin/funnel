@@ -9,7 +9,7 @@
   "keywords": ["funnel","statsd","graphite","nagios","munin","json","cloudwatch","mongodb", "dbi"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/fictivekin/metrics-funnel.git"
+    "url": "https://github.com/fictivekin/funnel.git"
   },
   "bin": {
     "metrics_funnel": "funnel.js"
