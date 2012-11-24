@@ -1,5 +1,5 @@
 {
-  "name": "metrics-funnel",
+  "name": "funnel",
   "description": "Funnel metrics from various sources into StatsD",
   "version": "0.1.0",
   "author": "Sean Coates <sean@seancoates.com>",
