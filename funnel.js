@@ -59,6 +59,7 @@ module.exports = {
     json: require('./plugin/json'),
     cloudwatch: require('./plugin/cloudwatch'),
     dbi: require('./plugin/dbi'),
+    command: require('./plugin/command'),
 
     COUNT: shared.COUNT,
     ALL: shared.ALL,

@@ -233,5 +233,20 @@ source = funnel.nagios({
 
 You'll notice that `funnel.ALL` is used here, too. This collects all performance data under this heading. `from` can be an array (or a string for a single server, but you *are* running MongoDB in a replica set, right? (-: ).
 
+### command ###
+
+This plugin allows you to run arbitrary commands to fetch metrics.
+
+```javascript
+source = funnel.command({
+    services: {
+        'seconds': function (stdout) { return parseInt(stdout); },
+    },
+    from: 'date +%s'
+});
+```
+
+
+
 
 
