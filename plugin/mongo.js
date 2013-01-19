@@ -41,6 +41,27 @@ module.exports = function (service) {
         });
     };
 
+    var doAggregate = function (conn, from, funneler, serviceName, collection, aggregate, processor) {
+        conn.collection(collection, function (err, coll) {
+            pending++;
+            coll.aggregate(aggregate, function (err, result) {
+                pending--;
+                if (result) {
+                    funneler({
+                        'funnel': 'mongo',
+                        'nodeName': from.replace(/^mongodb:\/\//, ''),
+                        'serviceName': serviceName,
+                        'metricName': 'aggregate',
+                        'reading': processor(result),
+                    });
+                }
+                if (pending == 0) {
+                    conn.close();
+                }
+            });
+        });
+    };
+
     return function(funneler) {
         if (typeof service.from == 'string') {
             service.from = [service.from];
@@ -53,8 +74,10 @@ module.exports = function (service) {
                     var collectionName;
                     if (service.services[serviceName] === shared.COUNT) {
                         doCount(conn, from, funneler, serviceName);
-                    } else {
+                    } else if (service.services[serviceName].query) {
                         doQuery(conn, from, funneler, serviceName, service.services[serviceName].collection, service.services[serviceName].query);
+                    } else if (service.services[serviceName].aggregate) {
+                        doAggregate(conn, from, funneler, serviceName, service.services[serviceName].collection, service.services[serviceName].aggregate, service.services[serviceName].processor);
                     }
                 }
 
