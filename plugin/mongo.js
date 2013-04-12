@@ -3,15 +3,15 @@ var shared = require('./shared');
 module.exports = function (service) {
     var pending = 0;
 
-    var doCount = function (conn, from, funneler, collection) {
-        conn.collection(collection, function (err, coll) {
+    var doCount = function (conn, from, funneler, serviceName, thisService) {
+        conn.collection(serviceName, function (err, coll) {
             pending++;
             coll.count(function (err, count) {
                 pending--;
                 funneler({
                     'funnel': 'mongo',
                     'nodeName': from.replace(/^mongodb:\/\//, ''),
-                    'serviceName': collection,
+                    'serviceName': serviceName,
                     'metricName': 'count',
                     'reading': count
                 });
@@ -22,10 +22,10 @@ module.exports = function (service) {
         });
     };
 
-    var doQuery = function (conn, from, funneler, serviceName, collection, query) {
-        conn.collection(collection, function (err, coll) {
+    var doQuery = function (conn, from, funneler, serviceName, thisService) {
+        conn.collection(thisService.collection, function (err, coll) {
             pending++;
-            coll.count(query, function (err, count) {
+            coll.count(thisService.query, function (err, count) {
                 pending--;
                 funneler({
                     'funnel': 'mongo',
@@ -41,10 +41,10 @@ module.exports = function (service) {
         });
     };
 
-    var doAggregate = function (conn, from, funneler, serviceName, collection, aggregate, processor) {
-        conn.collection(collection, function (err, coll) {
+    var doAggregate = function (conn, from, funneler, serviceName, thisService) {
+        conn.collection(thisService.collection, function (err, coll) {
             pending++;
-            coll.aggregate(aggregate, function (err, result) {
+            coll.aggregate(thisService.aggregate, function (err, result) {
                 pending--;
                 if (result) {
                     funneler({
@@ -52,7 +52,7 @@ module.exports = function (service) {
                         'nodeName': from.replace(/^mongodb:\/\//, ''),
                         'serviceName': serviceName,
                         'metricName': 'aggregate',
-                        'reading': processor(result),
+                        'reading': thisService.processor(result),
                     });
                 }
                 if (pending == 0) {
@@ -73,11 +73,11 @@ module.exports = function (service) {
                 for (var serviceName in service.services) {
                     (function (thisService) {
                         if (thisService === shared.COUNT || thisService.count) {
-                            doCount(conn, from, funneler, serviceName);
+                            doCount(conn, from, funneler, serviceName, thisService);
                         } else if (thisService.query) {
-                            doQuery(conn, from, funneler, serviceName, thisService.collection, thisService.query);
+                            doQuery(conn, from, funneler, serviceName, thisService);
                         } else if (thisService.aggregate) {
-                            doAggregate(conn, from, funneler, serviceName, thisService.collection, thisService.aggregate, thisService.processor);
+                            doAggregate(conn, from, funneler, serviceName, thisService);
                         }
                     })(service.services[serviceName]);
                 }
