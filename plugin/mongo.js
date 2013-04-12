@@ -71,14 +71,15 @@ module.exports = function (service) {
             mongodb.connect(from, function(err, conn) {
 
                 for (var serviceName in service.services) {
-                    var collectionName;
-                    if (service.services[serviceName] === shared.COUNT) {
-                        doCount(conn, from, funneler, serviceName);
-                    } else if (service.services[serviceName].query) {
-                        doQuery(conn, from, funneler, serviceName, service.services[serviceName].collection, service.services[serviceName].query);
-                    } else if (service.services[serviceName].aggregate) {
-                        doAggregate(conn, from, funneler, serviceName, service.services[serviceName].collection, service.services[serviceName].aggregate, service.services[serviceName].processor);
-                    }
+                    (function (thisService) {
+                        if (thisService === shared.COUNT || thisService.count) {
+                            doCount(conn, from, funneler, serviceName);
+                        } else if (thisService.query) {
+                            doQuery(conn, from, funneler, serviceName, thisService.collection, thisService.query);
+                        } else if (thisService.aggregate) {
+                            doAggregate(conn, from, funneler, serviceName, thisService.collection, thisService.aggregate, thisService.processor);
+                        }
+                    })(service.services[serviceName]);
                 }
 
             });
