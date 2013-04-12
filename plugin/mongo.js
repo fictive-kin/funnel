@@ -66,18 +66,27 @@ module.exports = function (service) {
         if (typeof service.from == 'string') {
             service.from = [service.from];
         }
+
         var mongodb = require('mongodb');
+
         service.from.forEach(function (from) {
             mongodb.connect(from, function(err, conn) {
 
                 for (var serviceName in service.services) {
                     (function (thisService) {
+                        var funnelerWrapper = function (data) {
+                            if (thisService.metricName) {
+                                data.explicitMetricName = thisService.metricName;
+                            }
+                            funneler(data);
+                        };
+
                         if (thisService === shared.COUNT || thisService.count) {
-                            doCount(conn, from, funneler, serviceName, thisService);
+                            doCount(conn, from, funnelerWrapper, serviceName, thisService);
                         } else if (thisService.query) {
-                            doQuery(conn, from, funneler, serviceName, thisService);
+                            doQuery(conn, from, funnelerWrapper, serviceName, thisService);
                         } else if (thisService.aggregate) {
-                            doAggregate(conn, from, funneler, serviceName, thisService);
+                            doAggregate(conn, from, funnelerWrapper, serviceName, thisService);
                         }
                     })(service.services[serviceName]);
                 }

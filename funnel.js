@@ -17,12 +17,16 @@ var collect = function (sourcesdotdotdot) {
 
     var asMetricName = function (data, preserveDot) {
         var name = ['funnel'];
-        name.push(data.funnel);
-        name.push(fixMetricName(data.nodeName));
-        if (data.serviceName) {
-            name.push(fixMetricName(data.serviceName));
+        if (data.explicitMetricName) {
+            name.push(data.explicitMetricName);
+        } else {
+            name.push(data.funnel);
+            name.push(fixMetricName(data.nodeName));
+            if (data.serviceName) {
+                name.push(fixMetricName(data.serviceName));
+            }
+            name.push(fixMetricName(data.metricName, preserveDot));
         }
-        name.push(fixMetricName(data.metricName, preserveDot));
         return name.join('.');
     };
 
