@@ -39,7 +39,8 @@ module.exports = function (service) {
                         return;
                     }
 
-                    var reading = thisService.callback(result);
+                    var callback = thisService.callback || shared.dbiSolo;
+                    var reading = callback(result);
 
                     if ("object" == typeof reading) {
                         if (serviceName.indexOf('%') === -1) {
