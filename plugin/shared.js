@@ -32,7 +32,7 @@ module.exports = {
     },
     dbiSolo: function (result) {
         if (result && result[0]) {
-            return result[0].count;
+            return result[0][Object.keys(result[0])[0]];
         }
     },
     ALL: '__funnel.ALL__',
